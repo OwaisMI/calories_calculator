@@ -1,0 +1,6 @@
+Adding more foods in database
+Fixing lunch calories
+Copying data into calender
+
+Making site public
+Putting ads on site
