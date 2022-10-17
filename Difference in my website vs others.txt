@@ -1,0 +1,7 @@
+Copying meals to the calender
+Having different workouts
+Copying workouts to the calender
+
+Future difficult features(Probably phone app):
+Voice command that tells u what excercise is next
+Voice command in which u can tell them the workout started and tells it to stop workout so the timer for rest starts

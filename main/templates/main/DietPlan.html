@@ -1,12 +1,91 @@
 
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'main/style.css' %}">
+<style>
+    
+    .meals{
+    margin: 20px auto ;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+  background-color: aliceblue;
+    }
+    body{
+    
+        background-image: url('{% static "main/images/healthy.jpg" %}');
+        background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+    }
+    .cal{
+  background-color: green !important ; 
+}
+@media (max-width: 600px) {
+  .cal {
+    min-height:250px;
+    /*etc*/
+  }
+}
+</style>
+<nav class="cal">
+    <label class="logo">Logo</label>
+    
+    <ul class="toolbar">
+      <li class="toolbar_li"><a>Home</a></li>
+      <li class="toolbar_li"><a>About</a></li>
+      <li class="toolbar_li"><a>Contact</a></li>
+      <li class="toolbar_li"><a>Feedback</a></li>
+    </ul>
+  </nav>
+  <nav class="nav nav-bar">
+    <ul class="toolbar">
+      <li class="toolbar_li"><a>Home</a></li>
+      <li class="toolbar_li"><a>About</a></li>
+      <li class="toolbar_li"><a>Contact</a></li>
+      <li class="toolbar_li"><a>Feedback</a></li>
+    </ul>
+  </nav>
+<div class="bckground">
+    <div class="meals">
+        <h1>Diet Plan</h1>
+        <h3>Breakfast</h3>
+        {% for brkfast in breakfast %}
+        
+        {{brkfast}} Calories: {{brkfast.calories}}<br>
+        Carbs : {{brkfast.carbs}} grams <br>
+        Proteins : {{brkfast.protien}} grams <br>
+        Fats : {{brkfast.fats}} grams <br>
+        <strong>Weight :</strong>  {{per_grams_breakfast}} grams <br>
+        
+        
+        {% endfor %}
+    </div>
+    
+    <div class="meals">
+        <h3>Lunch</h3>
+        {% for lunch in lunchs %}
+        {{lunch}} Calories: {{lunch_calories}} <br>
+        <strong>Weight :</strong>  {{per_grams_lunch}} grams
+        {% endfor %}
+        
+    </div>
+    
+    <div class="meals">
+        <h3>Dinner</h3>
+        {% for dine in dinner_name %}
+        {{dine}} Calories: {{dinner_calories}} <br>
+        <strong>Weight :</strong> {{per_grams_dinner}} grams
+        {% endfor %}
+        
+        <h3>Total Calories:</h3> {{b_calorie|lower}}
+        <h3>Breakfast Carbs:</h3> {{breakfast_carbs}}
+        <h3>Breakfast Proteins:</h3> {{breakfast_proteins}}
+        <h3>Breakfast Fats:</h3> {{breakfast_Fats}}
+        
+    </div>
+    
+</div>
 
-<h1>Diet Plan</h1>
-<h3>Breakfast</h3>
-{% for brkfast in breakfast %}
-{{brkfast}} Calories: {{b_calorie}}<br>
-{% endfor %}
-
-<h3>Lunch</h3>
-{% for lunch in lunchs %}
-{{lunch}} Calories: {{lunchs}} <br>
-{% endfor %}

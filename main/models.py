@@ -21,7 +21,7 @@ class Food(models.Model):
     FoodType=models.ForeignKey('FoodType',on_delete=models.CASCADE, null=True)
     MealType=models.ForeignKey('Meals',on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.name + '-' + self.FoodType.name + '-' + self.MealType.name
+        return self.name + '-' + self.FoodType.name + '-' + self.MealType.name 
 
 class Units(models.Model):
     Ounce=models.IntegerField()

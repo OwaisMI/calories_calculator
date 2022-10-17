@@ -1,3 +1,4 @@
+from typing import Final
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
@@ -106,32 +107,42 @@ def home(request):
                 CalFromCarbs=Calories-CalFromFats-CalFromProteins
 
                 Carbs=round(CalFromCarbs/4,2)
+   
     context = {'form':form, 'Calorie':Calorie, 'Proteins': Proteins,'Carbs': Carbs, 'Fats': Fats}
     return render(request, 'main/home.html',context)
 
 def DietPlan(request):
-    Calories=float(request.POST['Calories'])
-    Proteins=float(request.POST['Proteins'])
-    Carbs=float(request.POST['Carbs'])
-    Fats=float(request.POST['Fats'])
-
+    Calories=int(request.POST.get('Calories', 0)) #Just changed to integer from float
+    Proteins=float(request.POST.get('Proteins',0))
+    Carbs=float(request.POST.get('Carbs',0))
+    Fats=float(request.POST.get('Fats',0))
+    
     breakfast_cal,breakfast_protein,breakfast_carbs,\
         breakfast_fats=percentage(20,calories=Calories,protein=Proteins,\
         carbs=Carbs,fats=Fats)
+    # print("This is breakfastcal at line 119", breakfast_cal) CORRECT
 
     lunch_cal,lunch_protein,lunch_carbs,\
         lunch_fats=percentage(40,calories=Calories,protein=Proteins,\
         carbs=Carbs,fats=Fats)
-
+    # print("This is lunch cal at line 126", lunch_cal) CORRECT
     dinner_cal=lunch_cal
     dinner_protein=lunch_protein
     dinner_carbs=lunch_carbs
     dinner_fats=lunch_fats
+    # print("the dinner calories are", dinner_cal)  CORRECT
 
     temp_cal=breakfast_cal
 
     find_cal=Food.objects.filter(MealType=1).all()
     sum_cal=0 #This is to be used in finding out total calories of total breakfast 
+    #Trying to take out individual macros for foods
+    for indv_macros in find_cal:
+        # brkfast_carbs =Food.objects.filter(MealType__name__contains='Breakfast')
+        brkfast_carbs =Food.objects.filter(carbs__contains='Breakfast')
+
+        # print("First Element of query set is",indv_macros)
+        # print("THIS IS THE CARBS WE WERE LOOKING FOR",brkfast_carbs)
 
 
     selectedBreakfast = []
@@ -140,48 +151,134 @@ def DietPlan(request):
         Carbohydrates=Food.objects.filter(MealType__name__contains='Breakfast').aggregate(Sum('carbs'))
         Fat=Food.objects.filter(MealType__name__contains='Breakfast').aggregate(Sum('fats'))
         Protein=Food.objects.filter(MealType__name__contains='Breakfast').aggregate(Sum('protien'))
+        Grams=Food.objects.filter(MealType__name__contains = 'Lunch').aggregate(Sum('per_how_much_gram'))
+        pergrams_breakfast=Grams['per_how_much_gram__sum']
+        breakfast_fats = Fat['fats__sum']
+        breakfast_carb = Carbohydrates['carbs__sum']
+        breakfast_proteins = Protein['protien__sum']
+        
+        # print("The total carbs are", Carbohydrates)
         break
+
+    # for item in find_cal:
+    #     firstcal =macros(carbs = item.carbs, fats = item.fats, proteins = item.protien)
+    #     print("first data is ", firstcal)
+    #     break
+    
     
     #Takes out the calories
     for item in find_cal:
         food_breakfast =macros(carbs = item.carbs, fats = item.fats, proteins = item.protien)
         sum_cal=food_breakfast+sum_cal
-    print("Sum is",sum_cal)
-    print("20% of breakfast cal is", temp_cal)
+        # print("The carbs are is ", carbs)
+  
+    # from breakfast_protein
+    final_protein_calories = breakfast_protein*4
+    final_carbs_calories = breakfast_carbs*4
+    final_fats_calories = breakfast_fats*4
+
+    final_cal_from_breakfast = final_protein_calories+final_carbs_calories+final_fats_calories
+    print("The final calories from breakfast is",final_cal_from_breakfast)
+
+    temp_carbs = 0
+    
+    # if item.carbs < temp_carbs:
+
+    b_calorie = "{:.2f}".format(sum_cal)
+
+    
         #Have to get sum of food_breakfast
     
     if(sum_cal <= temp_cal):  
         selectedBreakfast.append(item)
         temp_cal = temp_cal - sum_cal
-        print(temp_cal)       
-    else:
-        print("Else")
+        # print(temp_cal)       
+    
 
     find_lunch=Food.objects.filter(MealType=2).all()
-    sum_cal=0 #This is to be used in finding out total calories of total breakfast 
+    # sum_cal=0 #This is to be used in finding out total calories of total breakfast 
     selectedLunch = []
     # select_breakfast = Food.objects.filter(MealType__name__contains='Breakfast')
+   
+    
+    
+        
+        # print("The total carbs are", Carbohydrates)
+       
+   
     for var in find_lunch:
         Carbohydrates=Food.objects.filter(MealType__name__contains='Lunch').aggregate(Sum('carbs'))
         Fat=Food.objects.filter(MealType__name__contains='Lunch').aggregate(Sum('fats'))
         Protein=Food.objects.filter(MealType__name__contains='Lunch').aggregate(Sum('protien'))
+        Grams=Food.objects.filter(MealType__name__contains = 'Lunch').aggregate(Sum('per_how_much_gram'))
+        pergrams_lunch=Grams['per_how_much_gram__sum']
+        
+       
         break
     
+    
+    final_Lprotein_calories = lunch_protein*4
+    final_Lcarbs_calories = lunch_carbs*4
+    final_Lfats_calories = lunch_fats*4
+
+    final_cal_from_lunch = int(final_Lprotein_calories+final_Lcarbs_calories+final_Lfats_calories)
+    print("The final calories from lunch is",final_cal_from_lunch)
     #Takes out the calories
     for item in find_lunch:
         food_lunch =macros(carbs = item.carbs, fats = item.fats, proteins = item.protien)
         sum_cal=food_lunch+sum_cal
-    print("Sum is",sum_cal)
-    print("40% of lunch cal is", temp_cal)
+
+    # print("Sum is",sum_cal)
+
+    
         #Have to get sum of food_breakfast
     
     if(sum_cal <= temp_cal):  
         selectedLunch.append(item)
         temp_cal = temp_cal - sum_cal
-        print(temp_cal)       
-    else:
-        print("Else")
+        # print(temp_cal)       
+   
 
+    find_dinner=Food.objects.filter(MealType=3).all()
+    dinner_cal=0 #This is to be used in finding out total calories of total breakfast 
+    selectedDinner = []
+    # select_breakfast = Food.objects.filter(MealType__name__contains='Breakfast')
+    for var in find_dinner:
+        Carbohydrates=Food.objects.filter(MealType__name__contains='Dinner').aggregate(Sum('carbs'))
+        Fat=Food.objects.filter(MealType__name__contains='Dinner').aggregate(Sum('fats'))
+        Protein=Food.objects.filter(MealType__name__contains='Dinner').aggregate(Sum('protien'))
+        Grams=Food.objects.filter(MealType__name__contains = 'Lunch').aggregate(Sum('per_how_much_gram'))
+        pergrams_dinner=Grams['per_how_much_gram__sum']
+        break
+    print("The dinner carbs are:",dinner_protein)
+    final_Dprotein_calories = dinner_protein*4
+    final_Dcarbs_calories = dinner_carbs*4
+    final_Dfats_calories = dinner_fats*4
+
+    final_cal_from_Dinner = int(final_Dprotein_calories+final_Dcarbs_calories+final_Dfats_calories)
+    print("The final calories from Dinner is",final_cal_from_Dinner)
+    
+    FINAL_CALCULATED_CALORIES = "{:.2f}".format(final_cal_from_breakfast+final_cal_from_lunch+final_cal_from_Dinner) #CORRECT CALORIES FROM MACROS
+    print("The final calories are", FINAL_CALCULATED_CALORIES)
+
+    #Takes out the calories
+    for item in find_dinner:
+        food_dinner =macros(carbs = item.carbs, fats = item.fats, proteins = item.protien)
+        sum_cal=food_dinner+sum_cal
+   
+        dinner_calories = sum_cal
+    
+    # print("40% of dinner cal is", dinner_calories)
+
+    
+        #Have to get dinner of food_breakfast
+    
+     
+    selectedDinner.append(item)
+    temp_cal = temp_cal - sum_cal
+    # print("how much iis temp cal now", temp_cal)       
+    # else:
+    #     print("Else")
         # elif(sum_cal >= temp_cal):
         #     select_breakfast.append(item)
         #     temp_cal = temp_cal - sum_cal
@@ -191,7 +288,8 @@ def DietPlan(request):
     #     temp_cal=temp_cal-sum
     # print(selectedBreakfast)
 
-    return render(request, 'main/DietPlan.html',{"breakfast":find_cal,"b_calorie":temp_cal, "lunchs":find_lunch})
+    return render(request, 'main/DietPlan.html',{"breakfast":find_cal,"b_calorie":FINAL_CALCULATED_CALORIES, "lunchs":find_lunch, "lunch_calories": food_lunch, "dinner_calories":food_dinner, "dinner_name":find_dinner,
+   'per_grams_breakfast':pergrams_breakfast, 'breakfast_Fats': breakfast_fats, 'breakfast_carbs':breakfast_carb, 'breakfast_proteins':breakfast_proteins, 'per_grams_lunch':pergrams_lunch, 'per_grams_dinner':pergrams_dinner })
 
 def percentage(percentage,**macros):
     return (macros['calories']*percentage)/100,\

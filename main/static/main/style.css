@@ -1,0 +1,141 @@
+body{
+    
+  background-image: url('{% static "main/images/healthy.jpg" %}');
+  background-repeat: no-repeat;
+background-attachment: fixed;
+background-size: cover;
+}
+a{
+  color: green;
+}
+h1 {
+  color: green;
+}
+.calculator{
+  width: auto;
+  height: auto;
+}
+.nav-item{
+  float: right;
+}
+form {
+  border: 2px solid green;
+  background-color: #a9cd97 !important;
+  border-radius: 74px;
+  color: green;
+  margin: 40px;
+    padding: 50px;
+    text-align: center;
+    height: 70%;
+    padding-top: 0 0;
+}
+
+button, select, input[type=text],button {
+    overflow: visible;
+    margin: 5px;
+    width: 275px;
+    border: 2px solid;
+    border-radius: 5px;
+}
+ul{
+  list-style-type: none;
+  display: inline-flex;
+
+}
+.Diet{
+  width: 300px;
+}
+.calculator{
+  display: flex;
+  position: absolute;
+  top: 90%;
+}
+.parent{
+  position: relative;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+}
+
+nav{
+  color: green;
+  background: #a9cd97 !important;
+  width: 100%;
+}
+.logo{
+font-size: 35px;
+line-height: 80px;
+padding: 0 100px;
+font-weight: bold;
+margin-right: 20px;
+}
+ul.toolbar{
+  float:right;
+  padding: 20px;
+}
+.toolbar_li{
+  padding: 0 20px;
+  border-radius: 3px;
+  height: 30px;
+  font-size: 20px;
+  display: inline-block;
+  /* text-transform: uppercase; */
+}
+.toolbar_li:hover{
+  background: #a9cd97 ;
+  transition: .5s;
+  color: green;
+  list-style: none;
+  cursor: pointer;
+}
+.nav-link{
+  font-size: 20px;
+}
+.navbar-brand{
+  font-size: 36px;
+}
+
+@media screen(max-width: 1048px){
+  .logo{
+    font-size:32px;
+    padding-left: 60px;
+
+  }
+  nav ul{
+    margin-right: 20px;
+  }
+  nav a{
+    font-size: 17px;
+
+  }
+  @media all and (max-width:909px){
+    nav #icon{
+      display: block;
+    }
+    nav ul{
+      position: fixed;
+
+    }
+    button, select, input[type=text],button{
+      width: auto;
+    }
+    body{
+      color:blue;
+      background-color: #1b9bff;
+    }
+  }
+ 
+} 
+@media all and (max-width:560px) {
+  input.btn.btn-success.cal{
+    width: 150px !important;
+    min-height: 20px !important  ;
+  
+    
+  }
+  .calculator{
+
+  }
+ 
+}
