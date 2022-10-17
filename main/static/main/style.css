@@ -99,8 +99,7 @@ ul.toolbar{
 @media screen(max-width: 1048px){
   .logo{
     font-size:32px;
-    padding-left: 60px;
-
+    padding-left : 60px;
   }
   nav ul{
     margin-right: 20px;
